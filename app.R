@@ -8,8 +8,6 @@ library(DT)
 library(ggplot2)
 library(dplyr)
 library(gridExtra)
-library(shinyWidgets)
-library(shinyjs)
 
 source("plots_eda.R")
 source("plot_rc.R")
@@ -76,7 +74,8 @@ server <- function(input, output, session) {
                radioButtons("constrained", "Incorporate knowledge of conditional extremes parameters",
                             choices = c(FALSE, TRUE), inline = T)
         ),
-        column(12, tyle="background-color:#ffa153",
+        hr(),
+        column(12, style="background-color:#ff9b9b",
           withMathJax(),
           numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
                        value = 0.0001),
@@ -84,16 +83,17 @@ server <- function(input, output, session) {
           numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",
                        value = 0)
         ),
-        hr(),
         column(6,
-               actionButton("unc", "Uncertainty"),
                hr(),
-               uiOutput("uncertainty_inputs")
-        ),
-        column(6,
                actionButton("rcgof", "Goodness-of-fit"),
                hr(),
                uiOutput("rcgof_inputs")
+        ),
+        column(6,
+               hr(),
+               actionButton("unc", "Uncertainty"),
+               hr(),
+               uiOutput("uncertainty_inputs")
         )
       )
     }
@@ -128,12 +128,15 @@ server <- function(input, output, session) {
                radioButtons("constrained", "Incorporate knowledge of conditional extremes parameters",
                             choices = c(FALSE, TRUE), inline = T)
         ),
-        withMathJax(),
-        numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
-                     value = 0.0001),
         hr(),
-        numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",
-                     value = 0),
+        column(12, style="background-color:#ff9b9b",
+               withMathJax(),
+               numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
+                            value = 0.0001),
+               hr(),
+               numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",
+                            value = 0)
+        ),
         hr(),
         actionButton("adfgof", "Goodness-of-fit"),
         hr(),
@@ -155,7 +158,7 @@ server <- function(input, output, session) {
                        value = 1),
           hr(),
           numericInput("nboot", "Number of bootstrap samples",
-                       value = 250),
+                       value = 50),
           hr(),
           numericInput("nangles", "Number of angles in \\((0, \\pi/2)\\)",
                        value = 150),
