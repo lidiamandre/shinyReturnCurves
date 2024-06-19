@@ -9,6 +9,7 @@ library(ggplot2)
 library(dplyr)
 library(gridExtra)
 library(shinyWidgets)
+library(shinyjs)
 
 source("plots_eda.R")
 source("plot_rc.R")
@@ -51,15 +52,15 @@ server <- function(input, output, session) {
           numericInput("probability", "Curve survival probability \\(p\\)", value = 0.001,
                        min = 0, max = 1),
           hr(),
-          selectInput("method", "Method to estimate \\(\\lambda(\\omega)\\)",
-                      choices = list("hill", "cl")),
+          radioButtons("method", "Method to estimate \\(\\lambda(\\omega)\\)",
+                      choiceValues = list("hill", "cl"), choiceNames = list("Hill", "Composite Likelihood")),
           hr(),
           sliderInput("qmarg1", "Marginal quantile for the Marginal transformation for the first variable",
                       min = 0.01, max = 0.99, step = 0.01, value = 0.95),
           sliderInput("qmarg2", "Marginal quantile for the Marginal transformation for the second variable",
                       min = 0.01, max = 0.99, step = 0.01, value = 0.95),
           radioButtons("constrainedshape", "Constrained the shape parameter of the GPD fit",
-                      choices = c(TRUE, FALSE))
+                      choices = c(TRUE, FALSE), inline = T)
         ),
         column(6,
                withMathJax(),
@@ -73,14 +74,16 @@ server <- function(input, output, session) {
                numericInput("k", "Polynomial degree", value = 7),
                hr(),
                radioButtons("constrained", "Incorporate knowledge of conditional extremes parameters",
-                            choices = c(FALSE, TRUE))
+                            choices = c(FALSE, TRUE), inline = T)
         ),
-        withMathJax(),
-        numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
-                     value = 0.0001),
-        hr(),
-        numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",
-                     value = 0),
+        column(12, tyle="background-color:#ffa153",
+          withMathJax(),
+          numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
+                       value = 0.0001),
+          hr(),
+          numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",
+                       value = 0)
+        ),
         hr(),
         column(6,
                actionButton("unc", "Uncertainty"),
@@ -101,15 +104,15 @@ server <- function(input, output, session) {
                sliderInput("lengthw", "Number of angles \\(\\omega\\)",
                            min = 101, max = 1001, step = 100, value = 101),
                hr(),
-               selectInput("method", "Method to estimate \\(\\lambda(\\omega)\\)",
-                           choices = list("hill", "cl")),
+               radioButtons("method", "Method to estimate \\(\\lambda(\\omega)\\)",
+                            choiceValues = list("hill", "cl"), choiceNames = list("Hill", "Composite Likelihood")),
                hr(),
                sliderInput("qmarg1", "Marginal quantile for the Marginal transformation for the first variable",
                            min = 0.01, max = 0.99, step = 0.01, value = 0.95),
                sliderInput("qmarg2", "Marginal quantile for the Marginal transformation for the second variable",
                            min = 0.01, max = 0.99, step = 0.01, value = 0.95),
                radioButtons("constrainedshape", "Constrained the shape parameter of the GPD fit",
-                            choices = c(TRUE, FALSE))
+                            choices = c(TRUE, FALSE), inline = T)
         ),
         column(6,
                withMathJax(),
@@ -123,7 +126,7 @@ server <- function(input, output, session) {
                numericInput("k", "Polynomial degree", value = 7),
                hr(),
                radioButtons("constrained", "Incorporate knowledge of conditional extremes parameters",
-                            choices = c(FALSE, TRUE))
+                            choices = c(FALSE, TRUE), inline = T)
         ),
         withMathJax(),
         numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
