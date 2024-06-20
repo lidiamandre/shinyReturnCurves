@@ -70,7 +70,7 @@ server <- function(input, output, session) {
                sliderInput("qalphas2", "Marginal quantile used for the conditional extremes model for the second variable",
                            min = 0.01, max = 0.99, step = 0.01, value = 0.95),
                hr(),
-               numericInput("k", "Polynomial degree", value = 7),
+               numericInput("k", "Polynomial degree", value = 7, min = 1),
                hr(),
                radioButtons("constrained", "Incorporate knowledge of conditional extremes parameters",
                             choices = c(FALSE, TRUE), inline = T)
@@ -79,22 +79,22 @@ server <- function(input, output, session) {
         column(12, style="background-color:#ff9b9b",
           withMathJax(),
           numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
-                       value = 0.0001),
+                       value = 0.0001, min = 0),
           hr(),
           numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",
                        value = 0)
         ),
         column(6,
                hr(),
-               actionButton("rcgof", "Goodness-of-fit"),
-               hr(),
-               uiOutput("rcgof_inputs")
-        ),
-        column(6,
-               hr(),
                actionButton("unc", "Uncertainty"),
                hr(),
                uiOutput("uncertainty_inputs")
+        ),
+        column(6,
+               hr(),
+               actionButton("rcgof", "Goodness-of-fit"),
+               hr(),
+               uiOutput("rcgof_inputs")
         )
       )
     }
@@ -124,7 +124,7 @@ server <- function(input, output, session) {
                sliderInput("qalphas2", "Marginal quantile used for the conditional extremes model for the second variable",
                            min = 0.01, max = 0.99, step = 0.01, value = 0.95),
                hr(),
-               numericInput("k", "Polynomial degree", value = 7),
+               numericInput("k", "Polynomial degree", value = 7, min = 1),
                hr(),
                radioButtons("constrained", "Incorporate knowledge of conditional extremes parameters",
                             choices = c(FALSE, TRUE), inline = T)
@@ -133,7 +133,7 @@ server <- function(input, output, session) {
         column(12, style="background-color:#ff9b9b",
                withMathJax(),
                numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
-                            value = 0.0001),
+                            value = 0.0001, min = 0),
                hr(),
                numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",
                             value = 0)
@@ -143,6 +143,9 @@ server <- function(input, output, session) {
         hr(),
         uiOutput("adfgof_inputs")
       )
+    }
+    else if(input$analysis == "Exploratory Data Analysis") {
+      dataTableOutput("eda")
     }
   })
   
@@ -156,13 +159,13 @@ server <- function(input, output, session) {
         tagList(
           withMathJax(),
           numericInput("blocksize", "Size of blocks for block bootstrap",
-                       value = 1),
+                       value = 1, min = 1),
           hr(),
           numericInput("nboot", "Number of bootstrap samples",
-                       value = 50),
+                       value = 50, min = 1),
           hr(),
           numericInput("nangles", "Number of rays in \\((0, \\pi/2)\\)",
-                       value = 150),
+                       value = 150, min = 1),
           hr(),
           sliderInput("alpha", "Significance level for the \\((1-\\alpha)\\)% CI",
                       min = 0.01, max = 0.99, step = 0.05, value = 0.05)
@@ -180,13 +183,13 @@ server <- function(input, output, session) {
         tagList(
           withMathJax(),
           numericInput("blocksize", "Size of blocks for block bootstrap",
-                       value = 1),
+                       value = 1, min = 1),
           hr(),
           numericInput("nboot", "Number of bootstrap samples",
-                       value = 250),
+                       value = 250, min = 1),
           hr(),
           numericInput("nangles", "Number of rays in \\((0, \\pi/2)\\)",
-                       value = 150),
+                       value = 150, min = 1),
           hr(),
           sliderInput("alpha", "Significance level for the \\((1-\\alpha)\\)% CI",
                       min = 0.01, max = 0.99, step = 0.05, value = 0.05)
@@ -319,6 +322,10 @@ server <- function(input, output, session) {
   output$select_column_y <- renderUI({
     req(data())
     selectInput("colY", "Select second variable", choices = NULL)
+  })
+  
+  output$eda <- renderDataTable({
+    req(data())
   })
   
   output$hist <- renderPlot({
