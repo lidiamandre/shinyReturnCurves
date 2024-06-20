@@ -25,9 +25,10 @@ ui <- fluidPage(
     sidebarPanel(
       selectInput("analysis", "Choose Analysis:", 
                   choices = c("Exploratory Data Analysis", "Return Curve Estimation", "Angular Dependence Function")),
-      uiOutput("analysisinputs")#,
-      # tags$style(HTML('.irs--shiny .irs-line { background: linear-gradient(to right, red, green);}
-      #               '))
+      uiOutput("analysisinputs"),
+      tags$style(HTML('.irs--shiny .irs-line { background: linear-gradient(to right, #ff0e0e 0%, #37b61e 100%);}
+                       .irs--shiny .irs-bar { background: none;}
+                    '))
     ),
     mainPanel(
       uiOutput("analysis")
@@ -44,11 +45,11 @@ server <- function(input, output, session) {
       fluidRow(
         column(6,
           withMathJax(),
-          sliderInput("lengthw", "Number of angles \\(\\omega\\)",
-                      min = 101, max = 1001, step = 100, value = 101),
+          numericInput("lengthw", "Number of angles \\(\\omega\\)",
+                      min = 101, max = 1001, value = 101, step = 100),
           hr(),
           numericInput("probability", "Curve survival probability \\(p\\)", value = 0.001,
-                       min = 0, max = 1),
+                       min = 0, max = 1, step = 0.001),
           hr(),
           radioButtons("method", "Method to estimate \\(\\lambda(\\omega)\\)",
                       choiceValues = list("hill", "cl"), choiceNames = list("Hill", "Composite Likelihood")),
@@ -101,8 +102,8 @@ server <- function(input, output, session) {
       fluidRow(
         column(6,
                withMathJax(),
-               sliderInput("lengthw", "Number of angles \\(\\omega\\)",
-                           min = 101, max = 1001, step = 100, value = 101),
+               numericInput("lengthw", "Number of angles \\(\\omega\\)",
+                            min = 101, max = 1001, value = 101, step = 100),
                hr(),
                radioButtons("method", "Method to estimate \\(\\lambda(\\omega)\\)",
                             choiceValues = list("hill", "cl"), choiceNames = list("Hill", "Composite Likelihood")),
