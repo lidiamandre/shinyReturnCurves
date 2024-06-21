@@ -26,7 +26,13 @@ ui <- fluidPage(
       selectInput("analysis", "Choose Analysis:", 
                   choices = c("Exploratory Data Analysis", "Return Curve Estimation", "Angular Dependence Function")),
       uiOutput("analysisinputs"),
-      tags$style(HTML('.irs--shiny .irs-line { background: linear-gradient(to right, #ff0e0e 0%, #37b61e 100%);}
+      tags$style(HTML('#lengthw-label ~ span span.irs-line { background: #428bca;}
+                       #qmarg1-label ~ span span.irs-line { background: linear-gradient(to right, #ff0e0e 0%, #37b61e 100%);}
+                       #qmarg2-label ~ span span.irs-line { background: linear-gradient(to right, #ff0e0e 0%, #37b61e 100%);}
+                       #q-label ~ span span.irs-line { background: linear-gradient(to right, #ff0e0e 0%, #37b61e 100%);}
+                       #qalphas1-label ~ span span.irs-line { background: linear-gradient(to right, #ff0e0e 0%, #37b61e 100%);}
+                       #qalphas2-label ~ span span.irs-line { background: linear-gradient(to right, #ff0e0e 0%, #37b61e 100%);}
+                       #alpha-label ~ span span.irs-line { background: linear-gradient(to right, #37b61e 0%, #ff0e0e 100%);}
                        .irs--shiny .irs-bar { background: none;}
                     '))
     ),
@@ -45,7 +51,7 @@ server <- function(input, output, session) {
       fluidRow(
         column(6,
           withMathJax(),
-          numericInput("lengthw", "Number of rays \\(\\omega\\)",
+          sliderInput("lengthw", "Number of rays \\(\\omega\\)",
                       min = 51, max = 1001, value = 101, step = 100),
           hr(),
           numericInput("probability", "Curve survival probability \\(p\\)", value = 0.001,
@@ -76,7 +82,7 @@ server <- function(input, output, session) {
                             choices = c(FALSE, TRUE), inline = T)
         ),
         hr(),
-        column(12, style="background-color:#ff9b9b",
+        column(12, style="background-color:#ff9b9b", status = "warning",
           withMathJax(),
           numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
                        value = 0.0001, min = 0),
@@ -102,8 +108,8 @@ server <- function(input, output, session) {
       fluidRow(
         column(6,
                withMathJax(),
-               numericInput("lengthw", "Number of rays \\(\\omega\\)",
-                            min = 51, max = 1001, value = 101, step = 100),
+               sliderInput("lengthw", "Number of rays \\(\\omega\\)",
+                           min = 51, max = 1001, value = 101, step = 100),
                hr(),
                radioButtons("method", "Method to estimate \\(\\lambda(\\omega)\\)",
                             choiceValues = list("hill", "cl"), choiceNames = list("Hill", "Composite Likelihood")),
