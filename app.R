@@ -86,7 +86,7 @@ ui <- dashboardPage(
                        box(title = "Inputs for \\(\\lambda(\\omega)\\)", solidHeader = T, status = "info",
                            column(6,
                                   sliderInput("rclengthw", "Number of rays \\(\\omega\\)",
-                                              min = 51, max = 1001, value = 101, step = 100),
+                                              min = 51, max = 1001, value = 101, step = 50),
                                   
                                   sliderInput("rcq", "Quantile for \\(T_\\omega\\) and/or Hill estimator",
                                               min = 0.01, max = 0.99, step = 0.01, value = 0.95)
@@ -114,7 +114,7 @@ ui <- dashboardPage(
                        box(title = "Return curve inputs", solidHeader = T, status = "info",
                            numericInput("probability", "Curve survival probability \\(p\\)", value = 0.001,
                                         min = 0, max = 1, step = 0.001)),
-                       box(title = "Recommended not to change", status = "warning", solidHeader = T,
+                       box(title = "Informed use only", status = "warning", solidHeader = T,
                            numericInput("rctol", "Convergence tolerance for the composite maximum likelihood procedure",
                                         value = 0.0001, min = 0),
                            numericInput("rcparinit", "Initial values for the parameters \\(\\beta\\)",value = 0))
@@ -157,7 +157,7 @@ ui <- dashboardPage(
                        box(title = "Inputs for \\(\\lambda(\\omega)\\)", solidHeader = T, status = "info",
                            column(6,
                                   sliderInput("lengthw", "Number of rays \\(\\omega\\)",
-                                              min = 51, max = 1001, value = 101, step = 100),
+                                              min = 51, max = 1001, value = 101, step = 50),
                                   
                                   sliderInput("q", "Quantile for \\(T_\\omega\\) and/or Hill estimator",
                                               min = 0.01, max = 0.99, step = 0.01, value = 0.95)
@@ -182,7 +182,7 @@ ui <- dashboardPage(
                                        min = 0.01, max = 0.99, step = 0.01, value = 0.95),
                            sliderInput("qalphas2", "Quantile used for the second variable",
                                        min = 0.01, max = 0.99, step = 0.01, value = 0.95)),
-                       box(title = "Recommended not to change", status = "warning", solidHeader = T,
+                       box(title = "Informed use only", status = "warning", solidHeader = T,
                            numericInput("tol", "Convergence tolerance for the composite maximum likelihood procedure",
                                         value = 0.0001, min = 0),
                            numericInput("parinit", "Initial values for the parameters \\(\\beta\\)",value = 0))
@@ -298,13 +298,13 @@ server <- function(input, output, session) {
           hr(),
           column(6,
                  numericInput("rcblocksize", "Size of blocks for block bootstrap",
-                              value = 1, min = 1),
+                              value = 1, min = 1, step = 1),
                  numericInput("rcnboot", "Number of bootstrap samples",
-                              value = 50, min = 1)
+                              value = 50, min = 1, step = 1)
                  ),
           column(6,
                  numericInput("rcnangles", "Number of rays in \\((0, \\pi/2)\\)",
-                              value = 150, min = 1),
+                              value = 150, min = 1, step = 1),
                  sliderInput("rcalpha", "Significance level for the \\((1-\\alpha)\\)% CI",
                              min = 0.01, max = 0.99, step = 0.05, value = 0.05)
           )
@@ -324,13 +324,13 @@ server <- function(input, output, session) {
           hr(),
           column(6,
                  numericInput("rcgofblocksize", "Size of blocks for block bootstrap",
-                              value = 1, min = 1),
+                              value = 1, min = 1, step = 1),
                  numericInput("rcgofnboot", "Number of bootstrap samples",
-                              value = 250, min = 1)
+                              value = 250, min = 1, step = 1)
           ),
           column(6,
                  numericInput("rcgofnangles", "Number of rays in \\((0, \\pi/2)\\)",
-                              value = 150, min = 1),
+                              value = 150, min = 1, step = 1),
                  sliderInput("rcgofalpha", "Significance level for the \\((1-\\alpha)\\)% CI",
                              min = 0.01, max = 0.99, step = 0.05, value = 0.05)
           )
@@ -379,13 +379,13 @@ server <- function(input, output, session) {
           hr(),
           column(6,
                  numericInput("ray", "Ray \\(\\omega\\)",
-                              value = 0.5, min = 0, max = 1),
+                              value = 0.5, min = 0, max = 1, step = 0.05),
                  numericInput("blocksize", "Size of blocks for block bootstrap",
-                              value = 1)
+                              value = 1, min = 1, step = 1)
           ),
           column(6,
                  numericInput("nboot", "Number of bootstrap samples",
-                              value = 250),
+                              value = 250, min = 1, step = 1),
                  sliderInput("alpha", "Significance level for the \\((1-\\alpha)\\)% tolerance intervals",
                              min = 0.01, max = 0.99, step = 0.05, value = 0.05)
           )
