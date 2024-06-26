@@ -73,14 +73,14 @@ ui <- dashboardPage(
                            column(6,
                                   sliderInput("rcqmarg2", "Marginal quantile for the second variable",
                                               min = 0.01, max = 0.99, step = 0.01, value = 0.95)
-                                  ),
+                           ),
                            hr(),
                            column(12,
                                   radioButtons("rcconstrainedshape", "Constrained the shape parameter of the GPD fit",
                                                choices = c(TRUE, FALSE), inline = T)
-                                  )
+                           )
                            
-                           ),
+                       ),
                        box(title = "Inputs for \\(\\lambda(\\omega)\\)", solidHeader = T, status = "info",
                            column(6,
                                   sliderInput("rclengthw", "Number of rays \\(\\omega\\)",
@@ -88,14 +88,14 @@ ui <- dashboardPage(
                                   
                                   sliderInput("rcq", "Quantile for \\(T_\\omega\\) and/or Hill estimator",
                                               min = 0.01, max = 0.99, step = 0.01, value = 0.95)
-                                  ),
+                           ),
                            column(6,
                                   radioButtons("rcmethod", "Method to estimate \\(\\lambda(\\omega)\\)",
                                                choiceValues = list("hill", "cl"), choiceNames = list("Hill", "Composite Likelihood")),
                                   numericInput("rck", "Bernstein-Bezier polynomial degree", value = 7, min = 1)
-                                  )
-                           
                            )
+                           
+                       )
                 ),
                 column(6,
                        box(title = "Return Curve Estimation", solidHeader = T, status = "primary",
@@ -118,19 +118,19 @@ ui <- dashboardPage(
                            numericInput("rcparinit", "Initial values for the parameters \\(\\beta\\)",value = 0))
                        
                 )),
-                fluidRow(
-                  column(12,
-                         box(title = "Uncertainty of Return Curve", solidHeader = T, status = "primary", 
-                             collapsible = T, height = 750, collapsed = T,
+              fluidRow(
+                column(12,
+                       box(title = "Uncertainty of Return Curve", solidHeader = T, status = "primary", 
+                           collapsible = T, height = 750, collapsed = T,
                            actionButton("unc", "Uncertainty"),
-                             uiOutput("uncertainty_inputs"),
-                             plotOutput("rcunc")),
-                         box(title = "Goodness-of-fit of Return Curve", solidHeader = T, status = "primary", 
-                             collapsible = T, height = 750, collapsed = T,
-                             actionButton("rcgof", "Goodness-of-fit"),
-                             uiOutput("rcgof_inputs"),
-                             plotOutput("rcgof")))
-                )
+                           uiOutput("uncertainty_inputs"),
+                           plotOutput("rcunc")),
+                       box(title = "Goodness-of-fit of Return Curve", solidHeader = T, status = "primary", 
+                           collapsible = T, height = 750, collapsed = T,
+                           actionButton("rcgof", "Goodness-of-fit"),
+                           uiOutput("rcgof_inputs"),
+                           plotOutput("rcgof")))
+              )
       ),
       tabItem(tabName = "adf",
               withMathJax(),
@@ -187,14 +187,14 @@ ui <- dashboardPage(
                        
                 ),
                 column(12,
-                  box(title = "Goodness-of-fit of the Angular Dependence Function", solidHeader = T, 
-                      status = "primary", collapsible = T, width = 12, height = 750,
-                      collapsed = T,
-                      actionButton("adfgof", "Goodness-of-fit"),
-                      uiOutput("adfgof_inputs"),
-                      plotOutput("adfgof"))
-                  )
+                       box(title = "Goodness-of-fit of the Angular Dependence Function", solidHeader = T, 
+                           status = "primary", collapsible = T, width = 12, height = 750,
+                           collapsed = T,
+                           actionButton("adfgof", "Goodness-of-fit"),
+                           uiOutput("adfgof_inputs"),
+                           plotOutput("adfgof"))
                 )
+              )
       )
     )
   )
@@ -236,7 +236,6 @@ server <- function(input, output, session) {
   })
   
   output$hist <- renderPlot({
-    # req(data())
     req(data(), input$colX, input$colY)
     validate(
       need(input$colX %in% names(data()), "Select a valid first variable"),
@@ -248,7 +247,6 @@ server <- function(input, output, session) {
   })
   
   output$timeseries <- renderPlot({
-    # req(data())
     req(data(), input$colX, input$colY)
     validate(
       need(input$colX %in% names(data()), "Select a valid first variable"),
@@ -260,7 +258,6 @@ server <- function(input, output, session) {
   })
   
   output$acf <- renderPlot({
-    # req(data())
     req(data(), input$colX, input$colY)
     validate(
       need(input$colX %in% names(data()), "Select a valid first variable"),
@@ -272,7 +269,6 @@ server <- function(input, output, session) {
   })
   
   output$joint <- renderPlot({
-    # req(data())
     req(data(), input$colX, input$colY)
     validate(
       need(input$colX %in% names(data()), "Select a valid first variable"),
@@ -299,7 +295,7 @@ server <- function(input, output, session) {
                               value = 1, min = 1, step = 1),
                  numericInput("rcnboot", "Number of bootstrap samples",
                               value = 50, min = 1, step = 1)
-                 ),
+          ),
           column(6,
                  numericInput("rcnangles", "Number of rays in \\((0, \\pi/2)\\)",
                               value = 150, min = 1, step = 1),
@@ -335,22 +331,23 @@ server <- function(input, output, session) {
         )
       }
     })
-    output$rcunc <- renderPlot({
-      if (rcunctoggleState()) {
-        req(rcplotOutput())
-        uncrcplot(rcplotOutput(), input$rcblocksize, input$rcnboot, input$rcnangles, input$rcalpha)
-      }
-    })
-    output$rcgof <- renderPlot({
-      if (rcgoftoggleState()) {
-        req(rcplotOutput())
-        gofrcplot(rcplotOutput(), input$rcgofblocksize, input$rcgofnboot, input$rcgofnangles, input$rcgofalpha)
-      }
-    })
+  })
+  
+  output$rcunc <- renderPlot({
+    req(rcplotOutput(), input$rcblocksize, input$rcnboot, input$rcnangles, input$rcalpha)
+    if (rcunctoggleState()) {
+      uncrcplot(rcplotOutput(), input$rcblocksize, input$rcnboot, input$rcnangles, input$rcalpha)
+    }
+  })
+  
+  output$rcgof <- renderPlot({
+    req(rcplotOutput(), input$rcgofblocksize, input$rcgofnboot, input$rcgofnangles, input$rcgofalpha)
+    if (rcgoftoggleState()) {
+      gofrcplot(rcplotOutput(), input$rcgofblocksize, input$rcgofnboot, input$rcgofnangles, input$rcgofalpha)
+    }
   })
   
   output$rc <- renderPlot({
-    # req(data())
     req(data(), input$colX, input$colY)
     validate(
       need(input$colX %in% names(data()), "Select a valid first variable"),
@@ -391,9 +388,8 @@ server <- function(input, output, session) {
       }
     })
   })
-      
+  
   output$adfplot <- renderPlot({
-    # req(data())
     req(data(), input$colX, input$colY)
     validate(
       need(input$colX %in% names(data()), "Select a valid first variable"),
