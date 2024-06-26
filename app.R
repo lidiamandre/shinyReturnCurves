@@ -1,9 +1,7 @@
 library(shiny)
-library(bslib)
 library(ReturnCurves)
 library(evd)
 library(ismev)
-library(latex2exp)
 library(DT)
 library(ggplot2)
 library(dplyr)
@@ -53,7 +51,7 @@ ui <- dashboardPage(
     tabItems(
       tabItem(tabName = "eda",
               fluidRow(box(title = "Data", solidHeader = T, status = "info", collapsible = T, collapsed = T,
-                           dataTableOutput("edatable"), width = 12)),
+                           DTOutput("edatable"), width = 12)),
               fluidRow(box(title = "Histogram", solidHeader = T, status = "primary",
                            plotOutput("hist")),
                        box(title = "Autocorrelation", solidHeader = T, status = "primary",
@@ -233,7 +231,7 @@ server <- function(input, output, session) {
     selectInput("colY", "Select second variable", choices = NULL)
   })
   
-  output$edatable <- renderDataTable({
+  output$edatable <- renderDT({
     req(data())
   })
   
