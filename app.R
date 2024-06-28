@@ -98,7 +98,7 @@ ui <- dashboardPage(
                                     ),
                              column(4,
                                     numericInput("margnboot", "Number of bootstrap samples",
-                                                 value = 50, min = 1, step = 1)
+                                                 value = 250, min = 1, step = 1)
                                     ),
                              column(4,
                                     sliderInput("margalpha", "Significance level for the \\((1-\\alpha)\\)% CI",
