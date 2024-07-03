@@ -496,9 +496,8 @@ server <- function(input, output, session) {
   })
   
   output$adfgof <- renderPlot({
+    req(adfplotOutput(), input$ray, input$blocksize, input$nboot, input$alpha)
     if (adfgoftoggleState()) {
-      req(adfplotOutput())
-      
       gofadfplot(adfplotOutput(), input$ray, input$blocksize, input$nboot, input$alpha)
     }
   })
